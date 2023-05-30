@@ -65,7 +65,9 @@ label_pin = Label(window, text="PIN:", font=('Arial bold', 15))
 label_pin.grid(row=1, column=0, padx=10, pady=5)
 
 # Create the entry forms
-entry_rekening = Entry(window,font=('Arial bold', 15), width=15)
+entry_rekening = Entry(window,font=('Arial bold', 15), width=15,
+                       validate="key",
+                       validatecommand=(window.register(validate_numeric), "%P"))
 entry_rekening.grid(row=0, column=1, padx=10, pady=(200,5))
 
 entry_pin = Entry(window, show="*",font=('Arial bold', 15),width=15)  # Mask the PIN input with asterisks
