@@ -1,49 +1,100 @@
-from tkinter import Tk, Label, Button, Entry, messagebox
+from pathlib import Path
+from tkinter import *
+from subprocess import call
+from tkinter import ttk, messagebox
 
-def generate_invoice(nama_pembeli, jenis_tiket, jumlah_tiket, no_rekening):
-    # Proses pembuatan invoice dan pengiriman ke email atau penyimpanan ke database
-    # Kode ini akan menghasilkan nomor pembayaran (contoh: no_pembayaran = "12345678")
 
-    # Mengembalikan nomor pembayaran yang dihasilkan
-    return no_pembayaran
+OUTPUT_PATH = Path(__file__).parent
+ASSETS_PATH = OUTPUT_PATH / Path(r"D:\py\konser\build\assets\frame0")
 
-def generate_ticket(no_pembayaran, password_rekening):
-    # Proses pembuatan tiket berdasarkan nomor pembayaran dan password rekening
-    # Kode ini akan menghasilkan nomor tiket (contoh: no_tiket = "TICKET123")
+def relative_to_assets(path: str) -> Path:
+    return ASSETS_PATH / Path(path)
 
-    # Mengembalikan nomor tiket yang dihasilkan
-    return no_tiket
+def center_window(window):
+    window.update_idletasks()
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    window_width = window.winfo_width()
+    window_height = window.winfo_height()
+    x = int((screen_width - window_width) / 2)
+    y = int((screen_height - window_height) / 2)
+    window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
-def on_submit(nama_pembeli, jenis_tiket, jumlah_tiket, no_rekening):
-    no_pembayaran = generate_invoice(nama_pembeli, jenis_tiket, jumlah_tiket, no_rekening)
 
-    payment_window = Tk()
-    payment_window.geometry("375x667")
-    payment_window.title("Halaman Pembayaran")
-    payment_window.configure(bg="#FFFFFF")
 
-    no_pembayaran_label = Label(payment_window, text="Nomor Pembayaran:", font=('Arial', 15))
-    no_pembayaran_label.pack(pady=30)
+def validate_numeric(value):
+    if value.isdigit() or value == "":
+        return True
+    else:
+        messagebox.showerror("Invalid Input", "Please enter a numeric value.")
+        return False
 
-    no_pembayaran_entry = Entry(payment_window, font=('Arial', 12))
-    no_pembayaran_entry.pack()
+def formPage():
+    window.destroy()
+    call(["python", "form.py"])
 
-    def check_payment():
-        input_pembayaran = no_pembayaran_entry.get()
-        if input_pembayaran == no_pembayaran:
-            no_tiket = generate_ticket(no_pembayaran, password_rekening_entry.get())
-            messagebox.showinfo("Pembayaran Berhasil", f"Nomor Tiket Anda: {no_tiket}")
-            payment_window.destroy()
-        else:
-            messagebox.showerror("Pembayaran Gagal", "Nomor Pembayaran Salah")
 
-    password_rekening_label = Label(payment_window, text="Password Rekening:", font=('Arial', 15))
-    password_rekening_label.pack()
 
-    password_rekening_entry = Entry(payment_window, font=('Arial', 12), show='*')
-    password_rekening_entry.pack()
+window = Tk()
+window.geometry("375x667")
+window.title("Aplikasi Pemesanan Tiket Konser BTS")
+window.configure(bg="#FFFFFF")
 
-    submit_button = Button(payment_window, text="Cek Pembayaran", command=check_payment)
-    submit_button.pack(pady=20)
 
-    payment_window.mainloop()
+canvas = Canvas(
+    window,
+    bg="#FFFFFF",
+    height=667,
+    width=375,
+    bd=0,
+    highlightthickness=0,
+    relief="ridge"
+)
+canvas.place(x=0, y=0)
+image_image_1 = PhotoImage(file=relative_to_assets("bg2.png"))
+image_1 = canvas.create_image(
+    187.0,
+    337.0,
+    image=image_image_1
+)
+
+label_rekening = Label(window, text="No. Rekening:", font=('Arial bold', 15))
+label_rekening.grid(row=0, column=0, padx=10, pady=(200,5))
+
+label_pin = Label(window, text="PIN:", font=('Arial bold', 15))
+label_pin.grid(row=1, column=0, padx=10, pady=5)
+
+# Create the entry forms
+entry_rekening = Entry(window,font=('Arial bold', 15), width=15)
+entry_rekening.grid(row=0, column=1, padx=10, pady=(200,5))
+
+entry_pin = Entry(window, show="*",font=('Arial bold', 15),width=15)  # Mask the PIN input with asterisks
+entry_pin.grid(row=1, column=1, padx=10, pady=5)
+
+
+button_submit = Button(
+    window,
+    text="SUBMIT",
+
+)
+button_submit.place(
+    x=97.0,
+    y=500.0,
+    width=181.0,
+    height=48.0
+)
+button_back = Button(
+    window,
+    text="<BACK",
+    command=formPage
+)
+button_back.place(
+    x=10.0,
+    y=10.0,
+    width=50.0,
+    height=20.0
+)
+
+window.resizable(False, False)
+center_window(window)
+window.mainloop()

@@ -2,7 +2,7 @@ from pathlib import Path
 from tkinter import *
 from subprocess import call
 from tkinter import ttk, messagebox
-from payment import on_submit
+
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"D:\py\konser\build\assets\frame0")
@@ -43,13 +43,7 @@ def mainPage():
     window.destroy()
     call(["python", "main.py"])
 
-def submit_form():
-    nama_pembeli = entryNama.get()
-    jenis_tiket = combo.get()
-    jumlah_tiket = jumlah.get()
 
-    # Panggil fungsi on_submit di file payment.py
-    on_submit(nama_pembeli, jenis_tiket, jumlah_tiket)
 
 window = Tk()
 window.geometry("375x667")
@@ -101,7 +95,7 @@ jumlah.grid(row=4, column=1, columnspan=2, padx=0, pady=5)
 button_submit = Button(
     window,
     text="SUBMIT",
-    command=submit_form
+
 )
 button_submit.place(
     x=97.0,
