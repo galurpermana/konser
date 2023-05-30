@@ -39,6 +39,28 @@ def validate_numeric(value):
         messagebox.showerror("Invalid Input", "Please enter a numeric value.")
         return False
 
+def submit_form():
+    # Perform form validation here
+    # If form is valid, proceed to payment page
+    total = calculate_total()  # Calculate the total based on the selected ticket type and quantity
+    window.destroy()
+    call(["python", "payment.py", str(total)])
+
+def calculate_total():
+    ticket_price = 0
+    selected_ticket = combo.get()
+    if selected_ticket == "BRONZE - 50.000":
+        ticket_price = 50000
+    elif selected_ticket == "GOLD - 100.000":
+        ticket_price = 100000
+    elif selected_ticket == "PLATINUM - 150.000":
+        ticket_price = 150000
+
+    quantity = int(jumlah.get())
+    total = ticket_price * quantity
+    print(total)
+    return total
+
 def mainPage():
     window.destroy()
     call(["python", "main.py"])
@@ -95,7 +117,7 @@ jumlah.grid(row=4, column=1, columnspan=2, padx=0, pady=5)
 button_submit = Button(
     window,
     text="SUBMIT",
-
+    command=submit_form
 )
 button_submit.place(
     x=97.0,
