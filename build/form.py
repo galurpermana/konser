@@ -5,7 +5,7 @@ from tkinter import ttk, messagebox
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\py\konser\build\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path("assets/frame0")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -39,12 +39,26 @@ def validate_numeric(value):
         messagebox.showerror("Invalid Input", "Please enter a numeric value.")
         return False
 
+
 def submit_form():
     # Perform form validation here
     # If form is valid, proceed to payment page
-    total = calculate_total()  # Calculate the total based on the selected ticket type and quantity
+    nama = entryNama.get()
+    jenis = combo.get()
+    jml = jumlah.get()
+    total = calculate_total()
+
+    if not nama or not jenis or not jml:
+        messagebox.showerror("Error", "Silakan isi semua field.")
+        return
+
+    # If form is valid, proceed to payment page
+    total = calculate_total()
     window.destroy()
-    call(["python", "payment.py", str(total)])
+    call(["python", "payment.py", str(total), nama, jenis, jml])
+    # Calculate the total based on the selected ticket type and quantity
+    window.destroy()
+    call(["python", "payment.py", str(total),nama, jenis, jml])
 
 def calculate_total():
     ticket_price = 0
@@ -93,9 +107,9 @@ namaLabel = Label(window, text="Nama", font=('Arial bold', 15))
 jenisLabel = Label(window, text="Tiket", font=('Arial bold', 15))
 jumlahLabel = Label(window, text="Jumlah", font=('Arial bold', 15))
 
-namaLabel.grid(row=2, column=0, padx=30, pady=(150,10))
-jenisLabel.grid(row=3, column=0, padx=10, pady=10)
-jumlahLabel.grid(row=4, column=0, padx=0, pady=5)
+namaLabel.grid(row=2, column=0, padx=10, pady=(150,10), sticky='w')
+jenisLabel.grid(row=3, column=0, padx=10, pady=10, sticky='w')
+jumlahLabel.grid(row=4, column=0, padx=10, pady=5, sticky='w')
 
 entryNama = Entry(window, width=20, font=('Arial bold', 15))
 combo = ttk.Combobox(
