@@ -3,13 +3,15 @@ from tkinter import *
 from subprocess import call
 from tkinter import ttk, messagebox
 
-
+# Path untuk assets
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("assets/frame0")
 
+# Fungsi untuk mengembalikan path relatif ke assets
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+# Fungsi untuk mengatur jendela di tengah layar
 def center_window(window):
     window.update_idletasks()
     screen_width = window.winfo_screenwidth()
@@ -20,9 +22,11 @@ def center_window(window):
     y = int((screen_height - window_height) / 2)
     window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
+# Fungsi untuk validasi input nama
 def validate_entry(text):
     return text.isalpha() or " " in text
 
+# Fungsi untuk mengubah teks nama menjadi huruf kapital
 def capitalize_entry(event):
     entry_text = entryNama.get()
     if validate_entry(entry_text):
@@ -32,6 +36,7 @@ def capitalize_entry(event):
     else:
         entryNama.delete(0, END)
 
+# Fungsi untuk validasi input jumlah tiket
 def validate_numeric(value):
     if value.isdigit() or value == "":
         return True
@@ -39,27 +44,21 @@ def validate_numeric(value):
         messagebox.showerror("Invalid Input", "Please enter a numeric value.")
         return False
 
-
+# Fungsi untuk mengirimkan formulir
 def submit_form():
-    # Perform form validation here
-    # If form is valid, proceed to payment page
     nama = entryNama.get()
     jenis = combo.get()
     jml = jumlah.get()
-    total = calculate_total()
 
     if not nama or not jenis or not jml:
         messagebox.showerror("Error", "Silakan isi semua field.")
         return
 
-    # If form is valid, proceed to payment page
     total = calculate_total()
     window.destroy()
     call(["python", "payment.py", str(total), nama, jenis, jml])
-    # Calculate the total based on the selected ticket type and quantity
-    window.destroy()
-    call(["python", "payment.py", str(total),nama, jenis, jml])
 
+# Fungsi untuk menghitung total harga tiket
 def calculate_total():
     ticket_price = 0
     selected_ticket = combo.get()
@@ -72,20 +71,20 @@ def calculate_total():
 
     quantity = int(jumlah.get())
     total = ticket_price * quantity
-    print(total)
     return total
 
+# Fungsi untuk kembali ke halaman utama
 def mainPage():
     window.destroy()
     call(["python", "main.py"])
 
-
-
+# Inisialisasi jendela utama
 window = Tk()
 window.geometry("375x667")
 window.title("Aplikasi Pemesanan Tiket Konser BTS")
 window.configure(bg="#FFFFFF")
 
+# Membuat canvas dan menambahkan gambar background
 canvas = Canvas(
     window,
     bg="#FFFFFF",
@@ -103,6 +102,7 @@ image_1 = canvas.create_image(
     image=image_image_1
 )
 
+# Membuat label dan field untuk input nama, jenis tiket, dan jumlah tiket
 namaLabel = Label(window, text="Nama", font=('Arial bold', 15))
 jenisLabel = Label(window, text="Tiket", font=('Arial bold', 15))
 jumlahLabel = Label(window, text="Jumlah", font=('Arial bold', 15))
@@ -128,6 +128,7 @@ entryNama.grid(row=2, column=1, columnspan=2, padx=0, pady=(150,5))
 combo.grid(row=3, column=1, columnspan=2, padx=0, pady=5)
 jumlah.grid(row=4, column=1, columnspan=2, padx=0, pady=5)
 
+# Tombol untuk mengirimkan formulir dan kembali ke halaman utama
 button_submit = Button(
     window,
     text="SUBMIT",
@@ -151,6 +152,9 @@ button_back.place(
     height=20.0
 )
 
+# Mengatur agar jendela tidak dapat diubah ukurannya
 window.resizable(False, False)
+# Mengatur jendela berada di tengah layar
 center_window(window)
+# Menjalankan event loop
 window.mainloop()

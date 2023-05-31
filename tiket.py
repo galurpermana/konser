@@ -8,16 +8,16 @@ from subprocess import call
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("assets/frame0")
 
-
+# Fungsi untuk membuka halaman formulir pemesanan tiket
 def formPage():
     window.destroy()
     call(["python", "form.py"])
 
-
+# Fungsi untuk mengubah path relatif ke path dalam assets
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-
+# Fungsi untuk mengatur jendela berada di tengah layar
 def center_window(window):
     window.update_idletasks()
     screen_width = window.winfo_screenwidth()
@@ -28,34 +28,27 @@ def center_window(window):
     y = int((screen_height - window_height) / 2)
     window.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
+nama = sys.argv[1]
+jenis = sys.argv[2]
+jml = sys.argv[3]
 
-def formPage():
-    window.destroy()
-    call(["python", "form.py"])
+# Fungsi untuk menghasilkan kode pemesanan secara acak
+def generate_booking_code(length):
+    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+    return code
 
+booking_codes = []
+for _ in range(int(jml)):
+    code = generate_booking_code(8)
+    booking_codes.append(code)
 
+# Membuat objek Tkinter
 window = Tk()
 window.geometry("375x667")
 window.title("Aplikasi Pemesanan Tiket Konser BTS")
 window.configure(bg="#FFFFFF")
 
-nama = sys.argv[1]
-jenis = sys.argv[2]
-jml = sys.argv[3]
-
-
-def generate_booking_code(length):
-    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-    return code
-
-
-booking_codes = []
-for _ in range(int(jml)):
-    code = generate_booking_code(8)  # Change the length as per your requirement
-    booking_codes.append(code)
-
-print(booking_codes)
-
+# Membuat canvas dan menambahkan gambar background
 canvas = Canvas(
     window,
     bg="#FFFFFF",
@@ -73,24 +66,29 @@ image_1 = canvas.create_image(
     image=image_image_1
 )
 
+# Menampilkan label nama
 label_nama = Label(window, text="Nama:", font=('Arial bold', 15))
 label_nama.grid(row=0, column=0, padx=10, pady=(200, 5), sticky='w')
 label_n = Label(window, text=nama, font=('Arial bold', 15))
 label_n.grid(row=0, column=1, padx=10, pady=(200, 5), sticky='w')
 
+# Menampilkan label jenis tiket
 label_jenis = Label(window, text="Jenis. Tiket :", font=('Arial bold', 15))
 label_jenis.grid(row=1, column=0, padx=10, pady=5, sticky='w')
 label_j = Label(window, text=jenis, font=('Arial bold', 15))
 label_j.grid(row=1, column=1, padx=10, pady=5, sticky='w')
 
+# Menampilkan label jumlah tiket
 label_jumlah = Label(window, text="Jumlah Tiket :", font=('Arial bold', 15))
 label_jumlah.grid(row=2, column=0, padx=10, pady=5, sticky='w')
 label_jml = Label(window, text=jml, font=('Arial bold', 15))
 label_jml.grid(row=2, column=1, padx=10, pady=5, sticky='w')
 
+# Menampilkan label kode tiket
 label_tiket = Label(window, text="Kode Tiket :", font=('Arial bold', 15))
 label_tiket.grid(row=3, column=0, padx=10, pady=5, sticky='nw')
 
+# Membuat frame dan text widget untuk menampilkan kode tiket dengan scrollbar
 text_frame = Frame(window)
 text_frame.grid(row=3, column=1, padx=10, pady=5, sticky='w')
 
@@ -101,17 +99,11 @@ text_t = Text(text_frame, font=('Arial bold', 15), height=8, width=15, yscrollco
 text_t.pack(side=LEFT, fill=BOTH)
 scrollbar.config(command=text_t.yview)
 
+# Menambahkan kode tiket ke text widget
 for code in booking_codes:
     text_t.insert(END, code + '\n')
 
-print(booking_codes)
-
-
-def formPage():
-    window.destroy()
-    call(["python", "form.py"])
-
-
+# Menambahkan tombol "BELI LAGI"
 button_1 = Button(
     window,
     text="BELI LAGI",
@@ -124,6 +116,9 @@ button_1.place(
     height=48.0
 )
 
+# Mengatur jendela tidak dapat diubah ukurannya
 window.resizable(False, False)
+# Mengatur jendela berada di tengah layar
 center_window(window)
+# Menjalankan event loop
 window.mainloop()
