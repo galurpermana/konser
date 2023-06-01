@@ -66,6 +66,12 @@ image_1 = canvas.create_image(
     image=image_image_1
 )
 
+tittle = Label(window, text="** TIKET BERHASIL DI BELI **", font=('Arial bold', 15))
+tittle.place( x=30.0,
+    y=100.0,
+    width=350.0,
+    height=48.0)
+
 # Menampilkan label nama
 label_nama = Label(window, text="Nama:", font=('Arial bold', 15))
 label_nama.grid(row=0, column=0, padx=10, pady=(200, 5), sticky='w')
